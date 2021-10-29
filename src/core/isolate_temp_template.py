@@ -111,22 +111,11 @@ def get_relative_path(f_path: str, cur_dir: str, dest_dir: str) -> str:
     return os.path.join(dest_dir, f_path)
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "--template", help="Cookiecutter template directory", required=True
-    )
-    args = parser.parse_args()
-    template_dir: str = args.template
-    cache_dir: str = str(pathlib.Path(template_dir, ".template_cache"))
-
+def run(template_dir: str, cache_dir: str) -> None:
     template_dir = os.path.abspath(template_dir)
-    project_dir: str = os.path.join(template_dir, "{{cookiecutter.project_name}}")
-
     dir_name: str = pathlib.Path(template_dir).name
     cache_dir = os.path.abspath(os.path.join(cache_dir, dir_name))
+
     if os.path.isdir(cache_dir):
         logging.info("Removing existing cache {cache_dir}".format(cache_dir=cache_dir))
         p = subprocess.Popen(["rm", "-Rf", cache_dir], stdout=subprocess.PIPE)
@@ -147,3 +136,17 @@ if __name__ == "__main__":
         p = subprocess.Popen(["cp", "-Rf", f_path, dest_path], stdout=subprocess.PIPE)
         p.communicate()
         p.wait()
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "--template", help="Cookiecutter template directory", required=True
+    )
+    args = parser.parse_args()
+    template_dir: str = args.template
+    cache_dir: str = str(pathlib.Path(template_dir, ".template_cache"))
+
+    run(template_dir=template_dir, cache_dir=cache_dir)
