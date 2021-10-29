@@ -15,6 +15,7 @@ authors = ["Tinh-Chi TRAN <tinhchi.tran@gmail.com>"]
 # The current project is installed in editable mode by default.
 python = "^3.7"
 pytest = "^6.2.5"
+argparse = "^1.4.0"
 
 [tool.poetry.dev-dependencies]
 black = "*"

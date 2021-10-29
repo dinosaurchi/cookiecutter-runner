@@ -1,10 +1,9 @@
+import argparse
+import logging
 import os
-import sys
 import pathlib
 import subprocess
-import logging
 from typing import List, Set
-
 
 logging.basicConfig(level=logging.INFO)
 
@@ -113,8 +112,16 @@ def get_relative_path(f_path: str, cur_dir: str, dest_dir: str) -> str:
 
 
 if __name__ == "__main__":
-    template_dir: str = sys.argv[1]
-    cache_dir: str = sys.argv[2]
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "--template", help="Cookiecutter template directory", required=True
+    )
+    args = parser.parse_args()
+    template_dir: str = args.template
+    cache_dir: str = str(pathlib.Path(template_dir, ".template_cache"))
+
     template_dir = os.path.abspath(template_dir)
     project_dir: str = os.path.join(template_dir, "{{cookiecutter.project_name}}")
 
