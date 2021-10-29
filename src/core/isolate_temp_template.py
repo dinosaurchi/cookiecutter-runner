@@ -56,11 +56,11 @@ def get_not_ignored_paths(gitignore_path: str) -> Set[str]:
         ],
         stdout=subprocess.PIPE,
     )
-    res = p.communicate()[0].decode("utf-8")
+    res: str = p.communicate()[0].decode("utf-8")
     p.wait()
-    res = res.split("\n")
-    res = [os.path.abspath(f_path) for f_path in res]
-    return set(res)
+    output_paths: List[str] = res.split("\n")
+    output_paths = [os.path.abspath(f_path) for f_path in output_paths]
+    return set(output_paths)
 
 
 def get_valid_paths(cur_dir: str) -> List[str]:
@@ -96,7 +96,7 @@ def get_valid_paths(cur_dir: str) -> List[str]:
     gitignore_path = pathlib.Path(project_path).joinpath(".gitignore")
 
     # Get paths of files not ignored by git in the template project
-    not_ignored_paths = get_not_ignored_paths(gitignore_path=gitignore_path)
+    not_ignored_paths = get_not_ignored_paths(gitignore_path=str(gitignore_path))
     logging.info(
         "Loaded {n} not ignored paths by .gitignore".format(n=len(not_ignored_paths))
     )
@@ -113,12 +113,12 @@ def get_relative_path(f_path: str, cur_dir: str, dest_dir: str) -> str:
 
 
 if __name__ == "__main__":
-    template_dir = sys.argv[1]
-    cache_dir = sys.argv[2]
+    template_dir: str = sys.argv[1]
+    cache_dir: str = sys.argv[2]
     template_dir = os.path.abspath(template_dir)
-    project_dir = os.path.join(template_dir, "{{cookiecutter.project_name}}")
+    project_dir: str = os.path.join(template_dir, "{{cookiecutter.project_name}}")
 
-    dir_name = pathlib.Path(template_dir).name
+    dir_name: str = pathlib.Path(template_dir).name
     cache_dir = os.path.abspath(os.path.join(cache_dir, dir_name))
     if os.path.isdir(cache_dir):
         logging.info("Removing existing cache {cache_dir}".format(cache_dir=cache_dir))
@@ -128,7 +128,7 @@ if __name__ == "__main__":
 
     os.makedirs(cache_dir, exist_ok=False)
 
-    res = get_valid_paths(cur_dir=template_dir)
+    res: List[str] = get_valid_paths(cur_dir=template_dir)
     logging.info("Loaded {n} valid paths".format(n=len(res)))
 
     for f_path in res:
