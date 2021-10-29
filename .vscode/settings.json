@@ -1,0 +1,29 @@
+{
+    "editor.tabSize": 4,
+    "autoDocstring.quoteStyle": "\"\"\"",
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "./.venv/bin/flake8",
+    "python.linting.flake8Args": [
+        "--config=./.flake8"
+    ],
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyPath": "./.venv/bin/mypy",
+    "python.linting.mypyArgs": [
+        "--config-file=./pyproject.toml"
+    ],
+    "python.defaultInterpreterPath": "./.venv/bin/python",
+    "python.formatting.provider": "black",
+    "python.formatting.blackPath": "./.venv/bin/black",
+    "python.formatting.blackArgs": [
+        "--config=./pyproject.toml"
+    ],
+    "editor.formatOnSave": true,
+    "python.sortImports.path": "./.venv/bin/isort",
+    "python.languageServer": "Pylance",
+    "python.testing.pytestEnabled": true,
+    "python.testing.pytestPath": "./.venv/bin/pytest",
+    "jupyter.collapseCellInputCodeByDefault": false,
+    "jupyter.defaultCellMarker": "# %%",
+    "notebook.lineNumbers": "on"
+}

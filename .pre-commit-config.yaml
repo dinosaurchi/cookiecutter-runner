@@ -1,0 +1,19 @@
+# Ref: https://sourcery.ai/blog/python-best-practices/
+
+repos:
+  - repo: local
+    hooks:
+      - id: lint-check
+        name: lint-check
+        stages: [commit]
+        language: system
+        entry: make lint.check
+        types: [python]
+
+      - id: type-check
+        name: type-check
+        stages: [commit]
+        language: system
+        entry: make type.check
+        types: [python]
+
