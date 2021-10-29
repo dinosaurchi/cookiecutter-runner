@@ -107,11 +107,27 @@ def get_valid_paths(cur_dir: str) -> List[str]:
 
 
 def get_relative_path(f_path: str, cur_dir: str, dest_dir: str) -> str:
+    """Return the new path of f_path when changing the working directory from cur_dir to dest_dir
+
+    Args:
+        f_path (str): target file path
+        cur_dir (str): current working directory (contain the target file path)
+        dest_dir (str): new working directory (where the f_path file will be moved to)
+
+    Returns:
+        str: the new path
+    """
     f_path = os.path.relpath(f_path, cur_dir)
     return os.path.join(dest_dir, f_path)
 
 
 def run(template_dir: str, cache_dir: str) -> None:
+    """Execute the isolating process
+
+    Args:
+        template_dir (str): template directory path
+        cache_dir (str): cache directory path
+    """
     template_dir = os.path.abspath(template_dir)
     dir_name: str = pathlib.Path(template_dir).name
     cache_dir = os.path.abspath(os.path.join(cache_dir, dir_name))
