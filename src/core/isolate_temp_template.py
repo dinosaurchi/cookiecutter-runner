@@ -21,6 +21,8 @@ def is_valid_template_directory(cur_dir: pathlib.Path) -> bool:
         - True if having cookiecutter.json and a {{cookiecutter.var_name}} directory
         - False otherwise
     """
+    if not cur_dir.exists():
+        raise FileNotFoundError(cur_dir)
     if not cur_dir.joinpath("cookiecutter.json").is_file():
         return False
     f_paths = list(cur_dir.glob("*"))
