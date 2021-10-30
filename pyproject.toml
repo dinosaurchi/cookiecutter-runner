@@ -16,6 +16,7 @@ authors = ["Tinh-Chi TRAN <tinhchi.tran@gmail.com>"]
 python = "^3.7"
 pytest = "^6.2.5"
 argparse = "^1.4.0"
+gitignore-parser = "^0.0.8"
 
 [tool.poetry.dev-dependencies]
 black = "*"
@@ -50,6 +51,7 @@ line_length = 100
 python_version = 3.7
 platform = "linux"
 files = "src"
+exclude = "_test_assets"
 # show error messages from unrelated files
 follow_imports = "normal"
 # suppress errors about unsatisfied imports

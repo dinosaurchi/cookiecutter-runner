@@ -5,6 +5,8 @@ import pathlib
 import subprocess
 from typing import List, Set
 
+from gitignore_parser import parse_gitignore
+
 logging.basicConfig(level=logging.INFO)
 
 
@@ -32,34 +34,29 @@ def is_valid_template_directory(cur_dir: str) -> bool:
     return True
 
 
-def get_not_ignored_paths(gitignore_path: str) -> Set[str]:
+def get_not_ignored_paths(cur_dir: str, gitignore_path: str) -> Set[str]:
     """Get path not being ignored by git due to the .gitignore
 
     Args:
+        cur_dir (str): directory to be considered
         gitignore_path (str): .gitignore path
 
     Returns:
-        Set[str]: set of paths not being ignored by git
+        Set[str]: set of paths in cur_dir not being ignored by git
     """
-    if not os.path.isfile(gitignore_path):
-        return set()
-    p = subprocess.Popen(
-        [
-            "git",
-            "ls-files",
-            "-c",
-            "-m",
-            "-o",
-            "--directory",
-            "--exclude-from={gitignore_path}".format(gitignore_path=gitignore_path),
-        ],
-        stdout=subprocess.PIPE,
-    )
-    res: str = p.communicate()[0].decode("utf-8")
-    p.wait()
-    output_paths: List[str] = res.split("\n")
-    output_paths = [os.path.abspath(f_path) for f_path in output_paths]
-    return set(output_paths)
+    f_paths = [
+        str(f_path) for f_path in pathlib.Path(cur_dir).rglob("*") if f_path.is_file()
+    ]
+    if not pathlib.Path(gitignore_path).is_file():
+        return set(f_paths)
+
+    matcher = parse_gitignore(gitignore_path)
+    f_paths = [
+        str(pathlib.Path(f_path).absolute())
+        for f_path in f_paths
+        if matcher(f_path) is False
+    ]
+    return set(f_paths)
 
 
 def get_valid_paths(cur_dir: str) -> List[str]:
@@ -84,7 +81,9 @@ def get_valid_paths(cur_dir: str) -> List[str]:
     result_paths = [str(pathlib.Path(cur_dir).joinpath("cookiecutter.json"))]
     hooks_dir_path = str(pathlib.Path(cur_dir).joinpath("hooks"))
     if pathlib.Path(hooks_dir_path).is_dir():
-        result_paths.append(hooks_dir_path)
+        result_paths.extend(
+            [str(f_path) for f_path in pathlib.Path(hooks_dir_path).rglob("*")]
+        )
 
     # Get the only {{cookiecutter.var_name}} directory path
     project_path = [
@@ -95,7 +94,9 @@ def get_valid_paths(cur_dir: str) -> List[str]:
     gitignore_path = pathlib.Path(project_path).joinpath(".gitignore")
 
     # Get paths of files not ignored by git in the template project
-    not_ignored_paths = get_not_ignored_paths(gitignore_path=str(gitignore_path))
+    not_ignored_paths = get_not_ignored_paths(
+        cur_dir=str(project_path), gitignore_path=str(gitignore_path)
+    )
     logging.info(
         "Loaded {n} not ignored paths by .gitignore".format(n=len(not_ignored_paths))
     )
