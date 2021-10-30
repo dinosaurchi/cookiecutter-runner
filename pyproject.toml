@@ -117,13 +117,16 @@ python_classes = [
 testpaths = [
   "src"
 ]
+norecursedirs = [
+  "*_test_assets"
+]
 
 [tool.coverage.run]
 branch = true
 # Source directory where to run the test coverage report
 source = ["src"]
 # Ignored patterns
-omit = [ ]
+omit = ["*_test_assets"]
 
 [tool.coverage.report]
 exclude_lines = [
