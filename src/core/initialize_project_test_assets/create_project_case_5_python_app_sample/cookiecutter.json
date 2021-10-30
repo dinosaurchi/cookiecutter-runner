@@ -1,0 +1,12 @@
+{
+    "project_name": "app_sample",
+    "package_name": "my_package",
+    "description": "Python application example project",
+    "python_version": ["3.7", "3.6", "3.8"],
+    "poetry_version": "1.1.11",
+    "author_name": "My Name",
+    "author_email": "my_name@testing.com",
+    "_copy_without_render": [
+        "*.lock"
+    ]
+}

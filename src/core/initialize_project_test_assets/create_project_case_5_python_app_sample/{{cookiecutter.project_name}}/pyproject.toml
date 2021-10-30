@@ -1,0 +1,141 @@
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
+
+[tool.poetry]
+# As this is a project directory, thus we do not need a specific package name (for the source code package)
+# We do not import it anywhere else except inside this project ({{cookiecutter.package_name}}.core.*, ...)
+name = "{{cookiecutter.package_name}}"
+version = "0.1.1"
+description = "{{cookiecutter.description}}"
+authors = ["{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>"]
+
+[tool.poetry.dependencies]
+# The current project is installed in editable mode by default.
+python = "^{{cookiecutter.python_version}}"
+pytest = "^6.2.5"
+
+[tool.poetry.dev-dependencies]
+black = "*"
+isort = "*"
+mypy = "*"
+pre-commit = "*"
+flake8 = "^4.0.1"
+pytest-cov = "^3.0.0"
+ipykernel = "^6.4.2"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+dirty = true
+
+[tool.poetry.scripts]
+hello = "{{cookiecutter.package_name}}.core.mylib:testing_function"
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 100
+
+[tool.mypy]
+# Ref: https://github.com/psf/black/blob/main/mypy.ini
+# Specify the target platform details in config, so your developers are
+# free to run mypy on Windows, Linux, or macOS and get consistent
+# results.
+python_version = {{cookiecutter.python_version}}
+platform = "linux"
+files = "{{cookiecutter.package_name}}"
+# show error messages from unrelated files
+follow_imports = "normal"
+# suppress errors about unsatisfied imports
+ignore_missing_imports = true
+# be strict
+disallow_untyped_calls = true
+warn_unused_configs = true
+warn_return_any = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_optional = true
+disallow_any_generics = true
+# The following are off by default.  Flip them on if you feel
+# adventurous.
+check_untyped_defs = true
+disallow_untyped_defs = true
+# mypy per-module options:
+# [[tool.mypy.overrides]]
+# module = "mycode.foo.*"
+# disallow_untyped_defs = true
+# 
+# [[tool.mypy.overrides]]
+# module = "mycode.bar"
+# warn_return_any = false
+
+[tool.black]
+line-length = 88
+target-version = ['py36', 'py37', 'py38']
+include = '\.pyi?$'
+# If --exclude is not set, Black will automatically ignore files and directories in .gitignore file(s), if present.
+# If you want Black to continue using .gitignore while also configuring the exclusion rules, please use --extend-exclude.
+extend-exclude = '''
+/(
+  # The following are specific to Black, you probably don't want those.
+  | blib2to3
+  | tests/data
+  | profiling
+)/
+'''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+# -q  : run tests quitely
+# -r  : show extra test summary info as specified by chars: (f)ailed, (E)rror, (s)kipped, (x)failed, (X)passed
+# -rA : show all
+addopts = "-rA -q"
+# Only consider these files patterns as a test module
+python_files = [
+  "*_test_unit.py",
+  "*_test_integ.py"
+]
+# Only consider function with test_ prefix in the detected test files as a test case
+python_functions = [
+  "test_*"
+]
+# Only consider methods inside classes match this name pattern
+python_classes = [
+  "Test*"
+]
+# Only test the source code
+testpaths = [
+  "{{cookiecutter.package_name}}"
+]
+
+[tool.coverage.run]
+branch = true
+# Source directory where to run the test coverage report
+source = ["{{cookiecutter.package_name}}"]
+# Ignored patterns
+omit = [ ]
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "def __repr__",
+  "def __str__",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+  "if typing.TYPE_CHECKING:"
+]
+
+[tool.coverage.html]
+directory = "cov_html"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "poetry-dynamic-versioning"]
+build-backend = "poetry.core.masonry.api"

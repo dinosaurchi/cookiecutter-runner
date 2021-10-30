@@ -1,0 +1,22 @@
+log/
+result/
+debug/
+data/
+dist/
+
+*.zip
+*.csv
+*.csv#
+*.txt
+*.xlsx
+*.xlsx#
+*.pdf
+*.pyc
+*.egg-info/
+.venv/
+.mypy_cache/
+
+!poetry.req.txt
+
+# pytest --cov auto-generated file
+.coverage
