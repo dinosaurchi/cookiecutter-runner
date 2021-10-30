@@ -1,4 +1,5 @@
 import pathlib
+import shutil
 from typing import List
 
 import pytest
@@ -71,31 +72,32 @@ def test_get_valid_paths(cur_dir: pathlib.Path, expected: List[pathlib.Path]) ->
     assert sorted(res) == sorted(expected)
 
 
-@pytest.mark.parametrize(
-    "cur_dir, expected",
-    [
-        (pathlib.Path("get_valid_paths_1"), True),
-        (pathlib.Path("get_valid_paths_2_with_ignored_file"), True),
-        (pathlib.Path("get_valid_paths_3_no_gitignore"), True),
-        (pathlib.Path("invalid_cookiecutter_dir_1_no_json"), False),
-        (pathlib.Path("invalid_cookiecutter_dir_2_no_dir_name"), False),
-    ],
-)
-def test_is_valid_template_directory(
-    cur_dir: pathlib.Path,
-    expected: bool,
-) -> None:
-    cur_dir = TEST_ASSETS_DIR.joinpath(cur_dir).absolute()
-    assert test_module.is_valid_template_directory(cur_dir=cur_dir) == expected
+class Test_is_valid_template_directory:
+    @pytest.mark.parametrize(
+        "cur_dir, expected",
+        [
+            (pathlib.Path("get_valid_paths_1"), True),
+            (pathlib.Path("get_valid_paths_2_with_ignored_file"), True),
+            (pathlib.Path("get_valid_paths_3_no_gitignore"), True),
+            (pathlib.Path("invalid_cookiecutter_dir_1_no_json"), False),
+            (pathlib.Path("invalid_cookiecutter_dir_2_no_dir_name"), False),
+        ],
+    )
+    def test_normal_case(
+        self,
+        cur_dir: pathlib.Path,
+        expected: bool,
+    ) -> None:
+        cur_dir = TEST_ASSETS_DIR.joinpath(cur_dir).absolute()
+        assert test_module.is_valid_template_directory(cur_dir=cur_dir) == expected
 
-
-@pytest.mark.parametrize(
-    "cur_dir",
-    [
-        pathlib.Path("not_existing_path"),
-    ],
-)
-def test_is_valid_template_directory_error(cur_dir: pathlib.Path) -> None:
-    cur_dir_path = TEST_ASSETS_DIR.joinpath(cur_dir).absolute()
-    with pytest.raises(FileNotFoundError):
-        test_module.is_valid_template_directory(cur_dir=cur_dir_path)
+    @pytest.mark.parametrize(
+        "cur_dir",
+        [
+            pathlib.Path("not_existing_path"),
+        ],
+    )
+    def test_error_case(self, cur_dir: pathlib.Path) -> None:
+        cur_dir_path = TEST_ASSETS_DIR.joinpath(cur_dir).absolute()
+        with pytest.raises(FileNotFoundError):
+            test_module.is_valid_template_directory(cur_dir=cur_dir_path)
