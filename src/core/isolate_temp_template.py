@@ -126,8 +126,6 @@ def run(template_dir: pathlib.Path, cache_dir: pathlib.Path) -> None:
         cache_dir (pathlib.Path): cache directory path
     """
     template_dir = template_dir.absolute()
-    dir_name: str = template_dir.name
-    cache_dir = cache_dir.joinpath(dir_name).absolute()
 
     if cache_dir.is_dir():
         logging.info("Removing existing cache {cache_dir}".format(cache_dir=cache_dir))
