@@ -89,7 +89,7 @@ def get_valid_paths(cur_dir: str) -> List[str]:
     project_path = [
         f_path
         for f_path in f_paths
-        if pathlib.Path(f_path).name.startswith("{{cookiecutter")
+        if pathlib.Path(f_path).name.startswith("{{cookiecutter.")
     ][0]
     gitignore_path = pathlib.Path(project_path).joinpath(".gitignore")
 
