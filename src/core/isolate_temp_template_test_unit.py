@@ -4,7 +4,7 @@ from typing import List
 
 import pytest
 
-from .isolate_temp_template import get_relative_path, get_valid_paths
+from . import isolate_temp_template as test_module
 
 TEST_ASSETS_DIR = str(
     pathlib.Path(pathlib.Path(__file__).parent).joinpath(
@@ -28,7 +28,8 @@ def test_get_relative_path(
     f_path: str, cur_dir: str, dest_dir: str, expected: str
 ) -> None:
     assert (
-        get_relative_path(f_path=f_path, cur_dir=cur_dir, dest_dir=dest_dir) == expected
+        test_module.get_relative_path(f_path=f_path, cur_dir=cur_dir, dest_dir=dest_dir)
+        == expected
     )
 
 
@@ -69,5 +70,5 @@ def test_get_valid_paths(cur_dir: str, expected: List[str]) -> None:
         pathlib.Path(cur_dir).joinpath(f_path).absolute().__str__()
         for f_path in expected
     ]
-    res = get_valid_paths(cur_dir=cur_dir)
+    res = test_module.get_valid_paths(cur_dir=cur_dir)
     assert sorted(res) == sorted(expected)
