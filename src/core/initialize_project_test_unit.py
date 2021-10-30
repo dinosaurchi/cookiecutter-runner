@@ -1,6 +1,7 @@
 import logging
 import pathlib
 import shutil
+from typing import List
 
 import pytest
 
@@ -78,3 +79,51 @@ class Test_create_project:
             )
             shutil.rmtree(output_dir)
             shutil.rmtree(SAMPLES_DIR)
+
+
+class Test_merge_commands:
+    @pytest.mark.parametrize(
+        "commands, merge_operator, expected",
+        [
+            (
+                [
+                    ["ls", "-l"],
+                    ["python3", "test.py", "--config", "./dir"],
+                    ["git", "init"],
+                ],
+                "&&",
+                [
+                    "ls",
+                    "-l",
+                    "&&",
+                    "python3",
+                    "test.py",
+                    "--config",
+                    "./dir",
+                    "&&",
+                    "git",
+                    "init",
+                ],
+            ),
+            (
+                [
+                    ["python2", "test4.py", "--input", "./data"],
+                    ["git", "add", "."],
+                ],
+                ";",
+                ["python2", "test4.py", "--input", "./data", ";", "git", "add", "."],
+            ),
+            (
+                [["python2", "test4.py", "--input", "./data"]],
+                "||",
+                ["python2", "test4.py", "--input", "./data"],
+            ),
+        ],
+    )
+    def test_normal_case(
+        self, commands: List[List[str]], merge_operator: str, expected: List[str]
+    ) -> None:
+        res = test_module.merge_commands(
+            commands=commands, merge_operator=merge_operator
+        )
+        assert res == expected

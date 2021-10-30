@@ -1,6 +1,7 @@
 import logging
 import pathlib
 import subprocess
+from typing import List
 
 logging.basicConfig(level=logging.INFO)
 
@@ -38,3 +39,20 @@ def create_project(template_dir: pathlib.Path, output_dir: pathlib.Path) -> None
         logging.error(message)
         raise RuntimeError(message)
     logging.info("Created project at: {output_dir}".format(output_dir=output_dir))
+
+
+def merge_commands(commands: List[List[str]], merge_operator: str) -> List[str]:
+    """Join all commands (each command is a list of strings) with a merge operator
+
+    Args:
+        commands (List[List[str]]): list of commands
+        merge_operator (str): merge operator such as &&, ||, ...
+
+    Returns:
+        List[str]: a merged list of commands
+    """
+    res = commands[0]
+    for cmd in commands[1:]:
+        res.append(merge_operator)
+        res.extend(cmd)
+    return res
