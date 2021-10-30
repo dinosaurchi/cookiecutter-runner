@@ -2,7 +2,7 @@ import argparse
 import logging
 import os
 import pathlib
-import subprocess
+import shutil
 from typing import List
 
 from gitignore_parser import parse_gitignore
@@ -131,9 +131,7 @@ def run(template_dir: pathlib.Path, cache_dir: pathlib.Path) -> None:
 
     if cache_dir.is_dir():
         logging.info("Removing existing cache {cache_dir}".format(cache_dir=cache_dir))
-        p = subprocess.Popen(["rm", "-Rf", cache_dir], stdout=subprocess.PIPE)
-        p.communicate()
-        p.wait()
+        shutil.rmtree(cache_dir)
 
     os.makedirs(cache_dir, exist_ok=False)
 
@@ -146,9 +144,7 @@ def run(template_dir: pathlib.Path, cache_dir: pathlib.Path) -> None:
         )
         dest_dir = pathlib.Path(dest_path).parent
         os.makedirs(dest_dir, exist_ok=True)
-        p = subprocess.Popen(["cp", "-Rf", f_path, dest_path], stdout=subprocess.PIPE)
-        p.communicate()
-        p.wait()
+        shutil.copy(f_path, dest_path)
 
 
 if __name__ == "__main__":

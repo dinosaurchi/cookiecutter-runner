@@ -17,6 +17,7 @@ python = "^3.7"
 pytest = "^6.2.5"
 argparse = "^1.4.0"
 gitignore-parser = "^0.0.8"
+shutils = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "*"
@@ -107,6 +108,10 @@ python_files = [
 # Only consider function with test_ prefix in the detected test files as a test case
 python_functions = [
   "test_*"
+]
+# Only consider methods inside classes match this name pattern
+python_classes = [
+  "Test*"
 ]
 # Only test the source code
 testpaths = [
