@@ -101,3 +101,67 @@ class Test_is_valid_template_directory:
         cur_dir_path = TEST_ASSETS_DIR.joinpath(cur_dir).absolute()
         with pytest.raises(FileNotFoundError):
             test_module.is_valid_template_directory(cur_dir=cur_dir_path)
+
+
+class Test_run:
+    def generate_project(
+        self, template_dir: pathlib.Path, cache_dir: pathlib.Path
+    ) -> None:
+        if not template_dir.is_dir():
+            raise FileNotFoundError(template_dir)
+        if cache_dir.is_dir():
+            shutil.rmtree(cache_dir)
+        assert not cache_dir.is_dir()
+        # Generate cache
+        test_module.run(template_dir=template_dir, cache_dir=cache_dir)
+        assert cache_dir.is_dir()
+
+    def get_cache_dir(self, template_dir: pathlib.Path) -> pathlib.Path:
+        return template_dir.parent.joinpath(str(template_dir.name) + "_cached")
+
+    def compare_cache(
+        self, cache_dir_1: pathlib.Path, cache_dir_2: pathlib.Path
+    ) -> None:
+        f_paths_1 = sorted(
+            [str(f_path.relative_to(cache_dir_1)) for f_path in cache_dir_1.rglob("*")]
+        )
+        f_paths_2 = sorted(
+            [str(f_path.relative_to(cache_dir_2)) for f_path in cache_dir_2.rglob("*")]
+        )
+        assert f_paths_1 == f_paths_2
+
+    @pytest.mark.parametrize(
+        "template_dir",
+        [
+            pathlib.Path("run_1_empty_hooks"),
+            pathlib.Path("run_2_with_ignored_file"),
+            pathlib.Path("run_3_no_gitignore"),
+        ],
+    )
+    def test_remove_existing_cache(self, template_dir: pathlib.Path) -> None:
+        # Generate project from target test template
+        template_dir = TEST_ASSETS_DIR.joinpath(template_dir).absolute()
+        cache_dir = self.get_cache_dir(template_dir=template_dir)
+        self.generate_project(template_dir=template_dir, cache_dir=cache_dir)
+
+        # Generate the projcet from the temporary template to a specific cache
+        # It is used as a ground truth to check the next step
+        temporary_template_dir = TEST_ASSETS_DIR.joinpath("run_temp_case").absolute()
+        ground_truth_cache_dir = self.get_cache_dir(template_dir=temporary_template_dir)
+        self.generate_project(
+            template_dir=temporary_template_dir, cache_dir=ground_truth_cache_dir
+        )
+
+        # Generate another template to the same cache to check if the old cache is removed
+        test_module.run(template_dir=temporary_template_dir, cache_dir=cache_dir)
+
+        # Compare the new cache with the ground truth cache
+        self.compare_cache(cache_dir_1=cache_dir, cache_dir_2=ground_truth_cache_dir)
+
+        # Clean out the generated data
+        if cache_dir.is_dir():
+            shutil.rmtree(cache_dir)
+        assert not cache_dir.is_dir()
+        if ground_truth_cache_dir.is_dir():
+            shutil.rmtree(ground_truth_cache_dir)
+        assert not ground_truth_cache_dir.is_dir()
