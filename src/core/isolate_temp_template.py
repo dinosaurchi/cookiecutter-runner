@@ -125,6 +125,11 @@ def run(template_dir: pathlib.Path, cache_dir: pathlib.Path) -> None:
         template_dir (pathlib.Path): template directory path
         cache_dir (pathlib.Path): cache directory path
     """
+    logging.info(
+        "Isolating the template directory from {template_dir}".format(
+            template_dir=template_dir
+        )
+    )
     template_dir = template_dir.absolute()
 
     if cache_dir.is_dir():
