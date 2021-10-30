@@ -1,4 +1,3 @@
-import argparse
 import logging
 import os
 import pathlib
@@ -148,17 +147,3 @@ def run(template_dir: pathlib.Path, cache_dir: pathlib.Path) -> None:
         dest_dir = pathlib.Path(dest_path).parent
         os.makedirs(dest_dir, exist_ok=True)
         shutil.copy(f_path, dest_path)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter
-    )
-    parser.add_argument(
-        "--template", help="Cookiecutter template directory", required=True
-    )
-    args = parser.parse_args()
-    template_dir: pathlib.Path = pathlib.Path(args.template)
-    cache_dir: pathlib.Path = pathlib.Path(template_dir, ".template_cache")
-
-    run(template_dir=template_dir, cache_dir=cache_dir)
