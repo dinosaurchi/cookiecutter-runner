@@ -47,9 +47,9 @@ def main() -> None:
     )
     args = parser.parse_args()
     template_dir: pathlib.Path = pathlib.Path(args.template)
-    output_dir: pathlib.Path = pathlib.Path(args.output)
+    cache_dir: pathlib.Path = pathlib.Path(args.cache)
 
-    run(template_dir=template_dir, output_dir=output_dir)
+    run(template_dir=template_dir, output_dir=cache_dir)
 
 
 if __name__ == "__main__":
