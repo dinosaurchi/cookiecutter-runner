@@ -127,3 +127,42 @@ class Test_merge_commands:
             commands=commands, merge_operator=merge_operator
         )
         assert res == expected
+
+
+class Test_install_project:
+    def get_test_directory(self, project_dir: pathlib.Path) -> pathlib.Path:
+        test_dir = project_dir.joinpath(".test_cache")
+        if test_dir.is_dir():
+            shutil.rmtree(test_dir)
+        shutil.copytree(project_dir, test_dir)
+        return test_dir
+
+    def test_install_project_case_1_simple(self) -> None:
+        def assert_content(f_path: pathlib.Path, expected: str) -> None:
+            assert f_path.is_file()
+            with open(f_path, "r") as f:
+                assert f.read() == expected
+
+        project_dir = self.get_test_directory(
+            project_dir=TEST_ASSETS_DIR.joinpath("install_project_case_1_simple")
+        )
+        test_module.install_project(project_dir=project_dir)
+        assert not project_dir.joinpath(".git").is_dir()
+        assert_content(
+            f_path=project_dir.joinpath("src").joinpath("default"), expected="test"
+        )
+        assert_content(
+            f_path=project_dir.joinpath("src").joinpath("install"),
+            expected="Installing\n",
+        )
+        assert_content(
+            f_path=project_dir.joinpath("src").joinpath("lint"), expected="Linting\n"
+        )
+        assert_content(
+            f_path=project_dir.joinpath("src").joinpath("check"), expected="Checking\n"
+        )
+        assert_content(
+            f_path=project_dir.joinpath("src").joinpath("test"), expected="Testing\n"
+        )
+        if project_dir.is_dir():
+            shutil.rmtree(project_dir)

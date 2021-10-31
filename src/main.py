@@ -22,6 +22,9 @@ def run(template_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
         )
     )
     shutil.rmtree(isolated_template_dir)
+    for f_path in output_dir.glob("*"):
+        logging.info("Installing and testing {f_path}".format(f_path=f_path))
+        initialize_project.install_project(project_dir=f_path)
 
 
 if __name__ == "__main__":
