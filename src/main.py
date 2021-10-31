@@ -9,6 +9,12 @@ logging.basicConfig(level=logging.INFO)
 
 
 def run(template_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
+    """Create, install and test the project from a template
+
+    Args:
+        template_dir (pathlib.Path): template directory path
+        output_dir (pathlib.Path): output directory path
+    """
     isolated_template_dir = template_dir.joinpath(".template_cache")
     isolate_temp_template.run(
         template_dir=template_dir, cache_dir=isolated_template_dir
