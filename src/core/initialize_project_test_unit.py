@@ -44,11 +44,11 @@ class Test_create_project:
     @pytest.mark.parametrize(
         "template_dir, has_gitignore, is_correct",
         [
-            (pathlib.Path("case_1_empty_hooks"), True, True),
-            (pathlib.Path("case_2_with_ignored_file"), True, True),
-            (pathlib.Path("case_3_no_gitignore"), False, True),
-            (pathlib.Path("case_4_no_cookiecutter_error"), True, False),
-            (pathlib.Path("case_5_python_app_sample"), True, True),
+            (pathlib.Path("create_project_case_1_empty_hooks"), True, True),
+            (pathlib.Path("create_project_case_2_with_ignored_file"), True, True),
+            (pathlib.Path("create_project_case_3_no_gitignore"), False, True),
+            (pathlib.Path("create_project_case_4_no_cookiecutter_error"), True, False),
+            (pathlib.Path("create_project_case_5_python_app_sample"), True, True),
         ],
     )
     def test_normal_case(
