@@ -126,7 +126,7 @@ branch = true
 # Source directory where to run the test coverage report
 source = ["src"]
 # Ignored patterns
-omit = ["*_test_assets"]
+omit = ["*_test_assets", "*_test_unit.py", "*_test_integ.py"]
 
 [tool.coverage.report]
 exclude_lines = [
