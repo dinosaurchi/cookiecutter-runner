@@ -5,19 +5,16 @@
 
 [tool.poetry]
 # As this is a project directory, thus we do not need a specific package name (for the source code package)
-# We do not import it anywhere else except inside this project (src.core.*, ...)
-name = "src"
-version = "0.0.0"
-description = "An inline runner for cookiecutter template"
-authors = ["Tinh-Chi TRAN <tinhchi.tran@gmail.com>"]
+# We do not import it anywhere else except inside this project ({{cookiecutter.package_name}}.core.*, ...)
+name = "{{cookiecutter.package_name}}"
+version = "0.1.1"
+description = "{{cookiecutter.description}}"
+authors = ["{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>"]
 
 [tool.poetry.dependencies]
 # The current project is installed in editable mode by default.
-python = "^3.7"
+python = "^{{cookiecutter.python_version}}"
 pytest = "^6.2.5"
-argparse = "^1.4.0"
-gitignore-parser = "^0.0.8"
-shutils = "^0.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "*"
@@ -34,7 +31,7 @@ vcs = "git"
 dirty = true
 
 [tool.poetry.scripts]
-cookiecutter-runner = "src.main:main"
+hello = "{{cookiecutter.package_name}}.core.mylib:testing_function"
 
 [tool.isort]
 profile = "black"
@@ -49,10 +46,9 @@ line_length = 100
 # Specify the target platform details in config, so your developers are
 # free to run mypy on Windows, Linux, or macOS and get consistent
 # results.
-python_version = 3.7
+python_version = {{cookiecutter.python_version}}
 platform = "linux"
-files = "src"
-exclude = "_test_assets"
+files = "{{cookiecutter.package_name}}"
 # show error messages from unrelated files
 follow_imports = "normal"
 # suppress errors about unsatisfied imports
@@ -115,18 +111,15 @@ python_classes = [
 ]
 # Only test the source code
 testpaths = [
-  "src"
-]
-norecursedirs = [
-  "*_test_assets"
+  "{{cookiecutter.package_name}}"
 ]
 
 [tool.coverage.run]
 branch = true
 # Source directory where to run the test coverage report
-source = ["src"]
+source = ["{{cookiecutter.package_name}}"]
 # Ignored patterns
-omit = ["*_test_assets", "*_test_unit.py", "*_test_integ.py"]
+omit = [ ]
 
 [tool.coverage.report]
 exclude_lines = [

@@ -3,7 +3,6 @@ result/
 debug/
 data/
 dist/
-*_test_assets/
 
 *.zip
 *.csv
