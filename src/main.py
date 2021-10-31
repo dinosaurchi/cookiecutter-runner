@@ -33,7 +33,7 @@ def run(template_dir: pathlib.Path, output_dir: pathlib.Path) -> None:
         initialize_project.install_project(project_dir=f_path)
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
     )
@@ -41,10 +41,16 @@ if __name__ == "__main__":
         "--template", help="Cookiecutter template directory", required=True
     )
     parser.add_argument(
-        "--output", help="Output generated project directory", required=True
+        "--cache",
+        help="Cache directory",
+        default=pathlib.Path(".", ".cookiecutter-runner_cache"),
     )
     args = parser.parse_args()
     template_dir: pathlib.Path = pathlib.Path(args.template)
     output_dir: pathlib.Path = pathlib.Path(args.output)
 
     run(template_dir=template_dir, output_dir=output_dir)
+
+
+if __name__ == "__main__":
+    main()

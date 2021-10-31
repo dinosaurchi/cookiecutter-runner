@@ -34,7 +34,7 @@ vcs = "git"
 dirty = true
 
 [tool.poetry.scripts]
-hello = "src.core.mylib:testing_function"
+cookiecutter-runner = "src.main:main"
 
 [tool.isort]
 profile = "black"
